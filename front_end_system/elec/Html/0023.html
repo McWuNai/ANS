@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+.container {
+  position: relative;
+  display: inline-block;
+}
+
+textarea {
+  position: relative;
+  z-index: 1; /* 保证 textarea 在上层 */
+}
+
+.container:hover .div1,
+.container:hover .div2 {
+  display: block;
+}
+
+.div1,
+.div2 {
+  display: none;
+  position: absolute;
+  top: 0;
+  width: 30px;
+  height: 100%;
+  z-index: 2; 
+}
+
+.div1 {
+  left: 0;
+  background-image: linear-gradient(to left, rgba(51, 51, 51, 0), rgba(51, 51, 51, 0.5));
+}
+
+.div2 {
+  right: 0;
+  background-image: linear-gradient(to right, rgba(51, 51, 51, 0), rgba(51, 51, 51, 0.5));
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var container = document.querySelector(".container");
+  var div1 = document.querySelector(".div1");
+  var div2 = document.querySelector(".div2");
+
+  container.addEventListener("mouseover", function() {
+    div1.style.display = "block";
+    div2.style.display = "block";
+  });
+
+  container.addEventListener("mouseout", function() {
+    div1.style.display = "none";
+    div2.style.display = "none";
+  });
+});
+</script>
+
+
+
+</head>
+<body>
+  <div class="container">
+    <div class="left">123</div>
+    <div class="right">633</div>
+    <textarea></textarea>
+  </div>
+</body>
+</html>

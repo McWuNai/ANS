@@ -1,0 +1,392 @@
+* {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif; /* 字体 */
+  font-weight: bold;
+  user-select: none; /* 阻止鼠标选中文本 */
+}
+body {
+  margin: 0; padding: 0;
+  width: 800px; height: 480px;
+  display: flex;
+  flex-direction: column;
+  background-image: url("../icon/result.jpg");
+  background-repeat: repeat;
+  background-size: cover;
+}
+img {
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  -ms-user-drag: none;
+  user-select: none; /* 禁止用户选择文本 */
+}
+
+
+/* 顶部控制栏 */
+.top-div {
+  height: 35px;
+  background-color: #333;
+  -webkit-app-region: drag; /* 允许拖拽 */
+}
+.name-a {
+  display: block;
+  font-size: 18px;
+  color: white;
+  margin: 5px 0 0 43%;
+  float: left;
+}
+.close-icon,
+.minimize-icon {
+  display: block;
+  width: 23px; height: 23px;
+  margin: 5px;
+  -webkit-app-region: no-drag; /* 解决拖拽与点击事件冲突 */
+  background-color: #333;
+  border-radius: 3px;
+  float: right;
+}
+.close-icon {
+  margin: 5px 10px 5px 5px;
+}
+.close-icon:hover {
+  background-color: red;
+}
+.minimize-icon:hover {
+  background-color: #322;
+}
+
+
+/* 主功能区域-包含左中右 */
+.main-div {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  background-color: rgba(245, 245, 245, 0.5);
+  font-size: 13px;
+}
+
+
+/* 左侧功能列表 */
+.left-div {
+  width: 13%; height: 100%;
+  padding: 22px;
+}
+label {
+  width: 70px; height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  margin-bottom: 16px;
+  border-radius: 8px; /* 圆角 */
+  cursor: pointer; /* 鼠标样式-手指 */
+}
+label:hover {
+  pointer-events: auto;
+  background-color: #a0a0a0bd;
+  transition: all 0.2s ease-in-out; /* 动画 */
+  box-shadow: 0 0 8px #9ecaed;
+}
+label:active {
+  scale: 98%; /* 按下时的缩放 */
+}
+label.selected { /* 已选中 */
+  background-color: #666;
+  color: #fff;
+}
+label img {
+  width: 18px; height: 18px;
+  margin: 2px;
+}
+
+
+/* 主要工作区 */
+.mid-div {
+  width: 65%; height: 100%;
+  padding: 10px;
+}
+section {
+  display: none;
+}
+textarea {
+  resize: none; /* 尺寸不可调整 */
+  padding: 8px;
+  font-size: 13px;
+  font-weight: normal; /* 正常粗细 */
+  border-radius: 8px;
+  border: 2px solid #cccccccc;
+  background-color: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease-in-out;
+}
+textarea:hover {
+  box-shadow: 0 0 8px #9ecaed;
+}
+.text-content { /* 文本内容 */
+  width: 100%; height: 360px;
+}
+.file-content { /* 文件内容 */
+  width: 500px; height: 340px;
+  position: relative;
+  /* z-index: 1; */
+}
+.file-path { /* 文件名 */
+  width: 61%;
+  padding: 5px 5px 5px 8px;
+  font-size: 13px;
+  font-weight: normal;
+  border-radius: 8px;
+  border: 2px solid #cccccccc;
+  background-color: rgba(255, 255, 255, 0.5);
+  float: left;
+  margin-right: 10px;
+  transition: all 0.2s ease-in-out;
+}
+.file-path:hover {
+  box-shadow: 0 0 8px #9ecaed;
+}
+button {
+  display: block;
+  width: 50px; height: 35px;
+  background-color: #0077FF;
+  color: #fff;
+  border-radius: 8px;
+  border: 2px solid #0077FF;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+button:hover {
+  background-color: #007acc;
+  box-shadow: 0 0 8px #9ecaed;
+  border-color: #0055CC;
+}
+button:active {
+  scale: 98%;
+}
+.input-btn { /* 导入按钮 */
+  width: 15%; height: 29px;
+  float: left;
+  margin-bottom: 8px;
+}
+.input-btn img {
+  margin-top: 2px;
+}
+.rolesPara-sele {
+  width: 20%; height: 29px;
+  font-size: 13px;
+  border-radius: 8px;
+  border: 2px solid #cccccccc;
+  background-color: rgba(255, 255, 255, 0.5);
+  float: right;
+}
+.Pagecontainer {
+  position: relative;
+  display: inline-block;
+}
+.Pagecontainer:hover .left,
+.Pagecontainer:hover .right {
+  display: block;
+}
+.left,
+.right {
+  display: none;
+  position: absolute;
+  top: 150px;
+  width: 40px; height: 40px;
+  background-color: rgba(52, 52, 52, 0.3);
+  border-radius: 50%;
+  z-index: 2;
+}
+.left:active,
+.right:active {
+  scale: 98%;
+}
+.left {
+  left: 16px;
+}
+.right {
+  right: 16px;
+}
+.left img,
+.right img {
+  width: 30px; height: 30px;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+
+#tooltip { /* 弹窗提示 */
+  position: fixed;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 25%; height: 15%;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  text-align: center;
+  font-size: 13px;
+  border-radius: 8px;
+  border: 2px solid #000000;
+  padding: 25px;
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+#tooltip.show {
+  display: block;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+#tooltip img {
+  width: 18px; height: 18px;
+  margin-left: 10px;
+  float: left;
+}
+
+
+/* 右侧配置区 */
+.right-div {
+  width: 22%; height: 100%;
+  padding: 20px 20px 20px 20px;
+}
+.input-btn img,
+#tooltip img,
+.option-icon,
+.optionSave-icon {
+  width: 18px; height: 18px;
+  margin-left: 10px;
+  display: block;
+  float: left;
+}
+.optionSave-icon:active {
+  scale: 98%;
+}
+.option-icon {
+  margin: 0 3px 0 0;
+}
+.optionSave-icon {
+  float: right;
+}
+#option-range {
+  width: 100px;
+}
+.right-div a{
+  font-size: 6px;
+  font-weight: normal;
+}
+.optionTitle-div {
+  font-size: 15px;
+  height: 36px;
+  border-bottom: 1px solid #dad9d9;
+}
+.roles-div {
+  height: 69px;
+  border-bottom: 1px solid #dad9d9;
+  padding-top: 11px;
+}
+.roles-sele {
+  height: 29px;
+}
+.speed-div {
+  height: 61px;
+  border-bottom: 1px solid #dad9d9;
+  padding-top: 10px;
+}
+.bgmusic-div,
+.badwords-div {
+  height: 55px;
+  border-bottom: 1px solid #dad9d9;
+  padding-top: 9px;
+}
+.option-range {
+  width: 300px;
+  height: 5px;
+}
+.inputBgmusic-btn,
+.badwords-btn {
+  height: 20px;
+  width: 60px;
+  float: right;
+}
+section {
+  display: none;
+}
+#create-btn {
+  width: 100%; height: 40px;
+  margin-top: 50px;
+  font-size: 18px;
+}
+#create-btn img {
+  width: 20px; height: 20px;
+  margin: 3px 0 0 20px;
+  display: block;
+  float: left;
+}
+select {
+  display: block;
+  width: 100%;
+  padding: 3px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+  color: #333;
+  text-align: center;
+  font-weight: normal;
+}
+select:hover {
+  box-shadow: 0 0 8px #9ecaed;
+}
+select:active {
+  scale: 98%;
+}
+select option {
+  padding: 3px;
+  background-color: #f8f8f8;
+  color: #333;
+  font-weight: normal;
+}
+
+
+/* 底部音频输出 */
+.bottom-div {
+  display: flex;
+  width: 100%; height: 15%;
+  background-image: linear-gradient(to bottom, rgba(51, 51, 51, 0), rgba(51, 51, 51, 1));
+}
+.bottom-div a{
+  color: white;
+  font-size: 13px;
+}
+.bottom-div img:active {
+  scale: 98%;
+}
+.audio-icon {
+  width: 50px; height: 50px;
+  margin: 7px 0 0 20px;
+}
+.audio-name {
+  width: 200px; height: 20px;
+  margin: 8px 0 0 15px;
+  overflow: hidden;
+  white-space: nowrap; /* 防止文本折行显示 */
+  text-overflow: ellipsis;
+}
+.play_or_pause-icon,
+.pause-icon {
+  width: 45px; height: 45px;
+  margin-left: 90px;
+  margin-top: 1px;
+  border-radius: 8px;
+}
+/*.audioRange-div {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px; height: 20px;
+}
+#audio-range {
+  width: 320px; height: 10px;
+}*/
+.list-icon {
+  width: 26px; height: 26px;
+  margin: 8px 0 0 335px;
+  border-radius: 8px;
+}

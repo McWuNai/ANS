@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="GBK">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>有声小说制作工具</title>
+  <link rel="stylesheet" href="../CSS/style.css">
+  <script src="../JavaScript/index.js"></script>
+</head>
+
+<body>
+
+  <!-- 主功能区域-包含左中右 -->
+  <div class="main-div">
+    <!-- 左侧功能列表 -->
+    <div class="left-div">
+      <label class="label2" title="小说文件转语音" onclick="showSection(2)">
+        <img class="file-icon" src="../icon/file.png">文件
+      </label>
+    </div>
+
+    <!-- 主要工作区 -->
+    <div class="mid-div">
+      <section class="section1">
+        <form>
+          <textarea class="text-content" placeholder="输入文字..." oninput="countChar()"></textarea>
+          <p class="count-p">字数：<span class="count-num">0</span></p>
+        </form>
+      </section>
+      <section class="section2">
+        <input type="text" class="file-path" placeholder="文件拖放至此...">
+        <button class="input-btn" title="导入小说txt文件"><img src="../icon/input.png">导入</button>
+        <select class="rolesPara-sele">
+          <option>--未选择--</option>
+          <option value="xiaoyan">小燕</option>
+          <option value="aisjiuxu">许久</option>
+          <option value="aisxping">小萍</option>
+          <option value="aisjinger">小婧</option>
+          <option value="xiaofeng">小峰</option>
+          <option value="aisbabyxu">许小宝</option>
+        </select>
+        <div class="Pagecontainer">
+          <textarea class="file-content" placeholder="文件内容..." oninput="countChar2()"></textarea>
+          <div class="left" title="上一段"><img src="../icon/left.png"></div>
+          <div class="right" title="下一段"><img src="../icon/right.png"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 右侧配置区 -->
+    <div class="right-div">
+      <div class="optionTitle-div">
+        <img class="option-icon" src="../icon/option.png" title="配置">配置
+        <img class="optionSave-icon" src="../icon/save.png" title="保存配置">
+      </div>
+      <div class="roles-div">角色：<br>
+        <select class="roles-sele">
+          <option>--未选择--</option>
+          <option value="xiaoyan">小燕</option>
+          <option value="aisjiuxu">许久</option>
+          <option value="aisxping">小萍</option>
+          <option value="aisjinger">小婧</option>
+          <option value="xiaofeng">小峰</option>
+          <option value="aisbabyxu">许小宝</option>
+        </select>
+      </div>
+      <div class="speed-div">音乐：<br>
+        <a class="bgmusicName-a">音频文件...</a><button class="inputBgmusic-btn"> 导入</button>
+      </div>
+      <div class="bgmusic-div">音乐：<br>
+        <a class="bgmusicName-a">背景音乐...</a><button class="inputBgmusic-btn">
+          导入</button><!--onclick="openBGMusicFile()"-->
+      </div>
+      <div class="badwords-div">敏感词：<br>
+        <a class="badwordsNum-a">0条</a><button class="badwords-btn">更新</button>
+      </div>
+      <section class="sectionBtn2">
+        <button type="submit" id="create-btn" class="createFromFile-btn" title="生成音频文件"><img
+            src="../icon/create.png">生成</button>
+      </section>
+    </div>
+  </div>
+
+  <!-- 底部音频输出 -->
+  <div class="bottom-div">
+    <img class="audio-icon" src="../icon/audio.png">
+    <a class="audio-name">Null</a>
+    <img class="pause-icon" src="../icon/play.png" title="暂停">
+    <img class="list-icon" src="../icon/list.png" title="播放文件选择">
+  </div>
+
+  <!-- 提示弹窗 -->
+  <div class="exceChars-div" id="tooltip">
+    <img src="../icon/attention.png">
+    <p>输入文字过长!</p>
+  </div>
+  <div class="errorFile-div" id="tooltip">
+    <img src="../icon/attention.png">
+    <p>不支持此类文件!</p>
+  </div>
+  <div class="taskSuccess-div" id="tooltip">
+    <img src="../icon/success.png">
+    <p id="changetext">操作成功!</p>
+  </div>
+  <div class="taskFaild-div" id="tooltip">
+    <img src="../icon/faild.png">
+    <p>操作失败!</p>
+  </div>
+
+  <script> //以下写到renderer.js
+
+    //功能页切换
+    showSection(2); //默认显示第一个section
+    function showSection(index) {
+      const sections = document.getElementsByTagName("section");
+      for (let i = 0; i < sections.length; i++) {
+        sections[i].style.display = "none";
+      }
+      document.querySelector(`.section${index}`).style.display = "block";
+      document.querySelector(`.sectionBtn${index}`).style.display = "block";
+      const selectedLabel = document.querySelector(`.label${index}`);
+      const allLabels = document.getElementsByTagName("label");
+      const textIcon = document.querySelector('.text-icon');
+      const fileIcon = document.querySelector('.file-icon');
+      for (let i = 0; i < allLabels.length; i++) {
+        allLabels[i].classList.remove("selected");
+      }
+      selectedLabel.classList.add("selected");
+      // 更改选中 label 的图标
+      if (selectedLabel.classList.contains("label1")) {
+        textIcon.src = "../icon/text-selected.png";
+        fileIcon.src = "../icon/file.png";
+      } else if (selectedLabel.classList.contains("label2")) {
+        fileIcon.src = "../icon/file-selected.png";
+        //textIcon.src = "../icon/text.png";
+      }
+    }
+
+    //统计字数
+    function countChar() {
+      const input = document.querySelector('.text-content');
+      const count = document.querySelector('.count-num');
+      const inputValue = input.value;
+      if (inputValue.trim().length > 0) {
+        const countNum = inputValue.length;
+        count.textContent = countNum;
+      }
+    }
+
+    //字数限制
+    let text = document.querySelector('.text-content');
+    let maxChars = 999; //限制1000
+    text.addEventListener("input", () => {
+      let charsLeft = maxChars - text.value.length;
+      if (charsLeft < 0) {
+        showExceCharsTip(); /* 弹出提示 */
+        text.value = text.value.slice(0, maxChars);
+      }
+    })
+
+    // 翻页效果
+    document.addEventListener("DOMContentLoaded", function () {
+      var container = document.querySelector(".Pagecontainer");
+      var left = document.querySelector(".left");
+      var right = document.querySelector(".right");
+      container.addEventListener("mouseover", function () {
+        left.style.display = "block";
+        right.style.display = "block";
+      });
+      container.addEventListener("mouseout", function () {
+        left.style.display = "none";
+        right.style.display = "none";
+      });
+    });
+
+    //提示弹窗
+    function showExceCharsTip() {
+      const exceChars = document.querySelector('.exceChars-div');
+      exceChars.classList.add('show');
+      setTimeout(() => {
+        exceChars.classList.remove('show');
+      }, 3000); // 3秒后自动关闭
+    }
+    function showErrorFileTip() {
+      const errorFile = document.querySelector('.errorFile-div');
+      errorFile.classList.add('show');
+      setTimeout(() => {
+        errorFile.classList.remove('show');
+      }, 3000);
+    }
+    function showTaskSuccessTip() { /* ！！添加判断成功才提示！！ */
+      const taskSuccess = document.querySelector('.taskSuccess-div');
+      taskSuccess.classList.add('show');
+      setTimeout(() => {
+        taskSuccess.classList.remove('show');
+      }, 3000);
+    }
+    function showTaskFaildTip() {
+      const taskFaild = document.querySelector('.taskFaild-div');
+      taskFaild.classList.add('show');
+      setTimeout(() => {
+        taskFaild.classList.remove('show');
+      }, 3000);
+    }
+
+    function openBGMusicFile() {
+      const fileName = document.querySelector('.bgmusicName-a');
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.mp3';
+      input.onchange = event => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        if (file.type.toLocaleLowerCase() !== "audio/mpeg") {
+          showErrorFileTip();
+          return;
+        }
+        reader.onload = () => {
+          fileName.textContent = file.name;
+        };
+        reader.readAsDataURL(file);
+      }
+      input.click();
+    }
+
+    // 执行任务 文件
+    const createFileBtn = document.querySelector('.createFromFile-btn');
+    createFileBtn.addEventListener('click', doTask2);
+    function doTask2() {
+      const fileContent = document.querySelector('.file-content').value;
+      showTaskSuccessTip();
+      if(fileContent != "") {
+        // ...传去
+      }else {
+        showTaskFaildTip();
+      }
+    }
+  </script>
+</body>
+
+</html>
